@@ -1,9 +1,7 @@
 #include "MainWindow.h"
 #include "Bird/Bird.h"
 #include "Scene/Scene.h"
-#include <QWidget>
 #include <QGraphicsView>
-#include <QGraphicsScene>
 #include <QDebug>
 
 MainWindow::MainWindow()

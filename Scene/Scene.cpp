@@ -17,6 +17,10 @@ Scene::Scene(QObject *parent) {
 
     bird_ = new Bird();
     addItem(bird_);
+
+//    pillarGroup_ = new Pillar();
+//    addItem(pillarGroup_);
+    spawnPillars();
 }
 
 void Scene::keyPressEvent(QKeyEvent *event) {
@@ -28,6 +32,14 @@ void Scene::keyPressEvent(QKeyEvent *event) {
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     if(event->button() == Qt::LeftButton) {
         bird_->shootUp();
-        qDebug() << "Left button pressed";
     }
+}
+
+void Scene::spawnPillars() {
+    timer_ = new QTimer(this);
+    connect(timer_, &QTimer::timeout, [=]() {
+        pillarGroup_ = new Pillar();
+        addItem(pillarGroup_);
+    });
+    timer_->start(800);
 }
