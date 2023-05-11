@@ -48,5 +48,7 @@ void Pillar::setX(const qreal &newX) {
 }
 
 Pillar::~Pillar() noexcept {
-    qDebug() << "You need to write destructor for Pillar";
+    delete xAnimation_;
+    delete topPillar;
+    delete bottomPillar_;
 }
