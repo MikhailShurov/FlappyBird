@@ -23,6 +23,7 @@ public slots:
     void rotateTo(const qreal&, const int&, const QEasingCurve&);
     void shootUp();
     void goDown();
+    void startBird();
 private:
     enum class State {
         Up,

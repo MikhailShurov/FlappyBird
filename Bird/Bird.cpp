@@ -22,9 +22,12 @@ Bird::Bird() {
     yAnimation_->setEndValue(ground_);
     yAnimation_->setEasingCurve(QEasingCurve::InQuad);
     yAnimation_->setDuration(1000);
-    yAnimation_->start();
 
     rotateAnimation_ = new QPropertyAnimation(this, "rotation", this);
+}
+
+void Bird::startBird() {
+    yAnimation_->start();
     rotateTo(90, 1000, QEasingCurve::InQuad);
 }
 

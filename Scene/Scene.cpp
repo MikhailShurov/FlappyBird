@@ -5,6 +5,7 @@
 #include "Scene.h"
 #include <QGraphicsSceneMouseEvent>
 #include <QKeyEvent>
+#include <QGraphicsItem>
 #include <QDebug>
 
 Scene::Scene(QObject *parent) {
@@ -18,20 +19,48 @@ Scene::Scene(QObject *parent) {
     bird_ = new Bird();
     addItem(bird_);
 
-//    pillarGroup_ = new Pillar();
-//    addItem(pillarGroup_);
+    gameOn_ = false;
+
     spawnPillars();
 }
 
+void Scene::startGame() {
+    bird_->startBird();
+    timer_->start(1500);
+}
+
 void Scene::keyPressEvent(QKeyEvent *event) {
-    if (event->key() == Qt::Key_Space) {
-        bird_->shootUp();
+    if (gameOn_) {
+        if (event->key() == Qt::Key_Space) {
+            bird_->shootUp();
+        }
+    } else {
+        if (event->key() != Qt::Key_unknown && event->key() != Qt::Key_Space) {
+            gameOn_ = true;
+            bird_->shootUp();
+            startGame();
+        }
     }
 }
 
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-    if(event->button() == Qt::LeftButton) {
-        bird_->shootUp();
+    if (gameOn_) {
+        if(event->button() == Qt::LeftButton) {
+            bird_->shootUp();
+        }
+    }
+}
+
+void Scene::stopGame() {
+    gameOn_ = false;
+
+    QList<QGraphicsItem*> items = this->items();
+    timer_->stop();
+    for (auto* item : items) {
+        Pillar* pillar = dynamic_cast<Pillar*>(item);
+        if (pillar) {
+            pillar->stopPillar();
+        }
     }
 }
 
@@ -39,7 +68,10 @@ void Scene::spawnPillars() {
     timer_ = new QTimer(this);
     connect(timer_, &QTimer::timeout, [=]() {
         pillarGroup_ = new Pillar();
+
+        connect(pillarGroup_, &Pillar::stopGame, [=]() {
+            stopGame();
+        });
         addItem(pillarGroup_);
     });
-    timer_->start(800);
 }
