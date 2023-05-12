@@ -53,6 +53,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
 void Scene::stopGame() {
     gameOn_ = false;
+    bird_->stopBird();
 
     QList<QGraphicsItem*> items = this->items();
     timer_->stop();
