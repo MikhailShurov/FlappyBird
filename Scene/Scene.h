@@ -14,11 +14,17 @@ class Scene: public  QGraphicsScene{
 public:
     Scene(QObject *parent = nullptr);
     void startGame();
+    void restartGame();
     void stopGame();
 private:
     Bird* bird_;
     Pillar* pillarGroup_;
-    bool gameOn_;
+    enum class gameStatus {
+        GameOn,
+        GameOff,
+        GameRestart
+    };
+    gameStatus gameStatus_;
 protected:
     void keyPressEvent(QKeyEvent*) override;
     void mousePressEvent(QGraphicsSceneMouseEvent*) override;

@@ -19,7 +19,7 @@ Scene::Scene(QObject *parent) {
     bird_ = new Bird();
     addItem(bird_);
 
-    gameOn_ = false;
+    gameStatus_ = gameStatus::GameOff;
 
     spawnPillars();
 }
@@ -30,29 +30,48 @@ void Scene::startGame() {
 }
 
 void Scene::keyPressEvent(QKeyEvent *event) {
-    if (gameOn_) {
+    if (gameStatus_ == gameStatus::GameOn) {
         if (event->key() == Qt::Key_Space) {
             bird_->shootUp();
         }
-    } else {
-        if (event->key() != Qt::Key_unknown && event->key() != Qt::Key_Space) {
-            gameOn_ = true;
+    } else if (gameStatus_ == gameStatus::GameOff){
+        if ((event->key() == Qt::Key_Space)) {
+            gameStatus_ = gameStatus::GameOn;
             bird_->shootUp();
             startGame();
+        }
+    } else {
+        if (event->key() == Qt::Key_Space) {
+            gameStatus_ = gameStatus::GameOff;
+            restartGame();
         }
     }
 }
 
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-    if (gameOn_) {
+    if (gameStatus_ == gameStatus::GameOn) {
         if(event->button() == Qt::LeftButton) {
             bird_->shootUp();
         }
     }
 }
 
+void Scene::restartGame() {
+    // Todo define Scene::restartGame
+    QList<QGraphicsItem*> itemsOnScene = this->items();
+    for (auto* item : itemsOnScene) {
+        if (dynamic_cast<Bird*>(item) != nullptr || dynamic_cast<Pillar*>(item) != nullptr) {
+            delete item;
+        }
+    }
+    bird_ = new Bird();
+    addItem(bird_);
+
+    spawnPillars();
+}
+
 void Scene::stopGame() {
-    gameOn_ = false;
+    gameStatus_ = gameStatus::GameRestart;
     bird_->stopBird();
 
     QList<QGraphicsItem*> items = this->items();
