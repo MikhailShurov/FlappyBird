@@ -12,10 +12,11 @@
 
 class Scene: public  QGraphicsScene{
 public:
-    Scene(QObject *parent = nullptr);
+    explicit Scene(QObject *parent = nullptr);
     void startGame();
     void restartGame();
     void stopGame();
+    void incrementScore();
 private:
     Bird* bird_;
     Pillar* pillarGroup_;
@@ -25,11 +26,12 @@ private:
         GameRestart
     };
     gameStatus gameStatus_;
+    QTimer* timer_;
+    int score_;
 protected:
     void keyPressEvent(QKeyEvent*) override;
     void mousePressEvent(QGraphicsSceneMouseEvent*) override;
     void spawnPillars();
-    QTimer* timer_;
 };
 
 

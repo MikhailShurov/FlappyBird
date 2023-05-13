@@ -23,10 +23,12 @@ public slots:
 private:
     qreal x_;
     int y_;
+    bool birdPass_;
     QPropertyAnimation* xAnimation_;
     QGraphicsPixmapItem *topPillar;
     QGraphicsPixmapItem *bottomPillar_;
     bool collideWithBird();
+    void checkIfBirdPass();
 };
 
 

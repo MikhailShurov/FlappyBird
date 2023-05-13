@@ -10,7 +10,7 @@ Q_OBJECT
 public:
     MainWindow();
 
-    ~MainWindow();
+    ~MainWindow() override;
 
 private:
     void setup();

@@ -9,7 +9,7 @@ MainWindow::MainWindow()
    setup();
 }
 
-MainWindow::~MainWindow(){}
+MainWindow::~MainWindow() = default;
 
 void MainWindow::setup() {
     Scene* scene = new Scene(this);

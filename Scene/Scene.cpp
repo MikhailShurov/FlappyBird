@@ -8,7 +8,7 @@
 #include <QGraphicsItem>
 #include <QDebug>
 
-Scene::Scene(QObject *parent) {
+Scene::Scene(QObject *parent): score_(0){
     setSceneRect(-144, -256, 288, 512);
 
     QGraphicsPixmapItem *background = new QGraphicsPixmapItem(QPixmap("./img/background_night.png"));
@@ -58,6 +58,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
 void Scene::restartGame() {
     // Todo define Scene::restartGame
+    score_ = 0;
     QList<QGraphicsItem*> itemsOnScene = this->items();
     for (auto* item : itemsOnScene) {
         if (dynamic_cast<Bird*>(item) != nullptr || dynamic_cast<Pillar*>(item) != nullptr) {
@@ -94,4 +95,9 @@ void Scene::spawnPillars() {
         });
         addItem(pillarGroup_);
     });
+}
+
+void Scene::incrementScore() {
+    ++score_;
+    qDebug() << score_;
 }

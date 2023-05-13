@@ -4,6 +4,7 @@
 
 #include "Pillar.h"
 #include "../Bird/Bird.h"
+#include "../Scene/Scene.h"
 #include <QPropertyAnimation>
 #include <QGraphicsItem>
 #include <QRandomGenerator>
@@ -11,7 +12,7 @@
 #include <QDebug>
 
 
-Pillar::Pillar() {
+Pillar::Pillar() : birdPass_(false) {
     topPillar = new QGraphicsPixmapItem(QPixmap("./img/topPillar.png"));
     bottomPillar_ = new QGraphicsPixmapItem(QPixmap("./img/bottomPillar.png"));
 
@@ -46,9 +47,9 @@ qreal Pillar::x() const {
 
 void Pillar::setX(const qreal &newX) {
     moveBy(newX - x_, 0);
+    checkIfBirdPass();
     if (collideWithBird()) {
         emit stopGame();
-        qDebug() << "WTF brooo? Be carefully!";
     }
     x_ = newX;
 }
@@ -69,4 +70,13 @@ bool Pillar::collideWithBird() {
 
 void Pillar::stopPillar() {
     xAnimation_->stop();
+}
+
+void Pillar::checkIfBirdPass() {
+    if (this->mapToScene(QPointF(0, 0)).x() < 0 && !birdPass_) {
+        birdPass_ = true;
+        QGraphicsScene* scene_ = scene();
+        Scene* scene1 = dynamic_cast<Scene*>(scene_);
+        scene1->incrementScore();
+    }
 }
