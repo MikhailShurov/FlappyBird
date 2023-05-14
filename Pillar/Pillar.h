@@ -15,14 +15,20 @@ public:
     Pillar();
     ~Pillar();
     qreal x() const;
+    void stopPillar();
+signals:
+    void stopGame();
 public slots:
     void setX(const qreal&);
 private:
     qreal x_;
     int y_;
+    bool birdPass_;
     QPropertyAnimation* xAnimation_;
     QGraphicsPixmapItem *topPillar;
     QGraphicsPixmapItem *bottomPillar_;
+    bool collideWithBird();
+    void checkIfBirdPass();
 };
 
 

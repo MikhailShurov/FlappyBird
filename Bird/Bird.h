@@ -23,6 +23,8 @@ public slots:
     void rotateTo(const qreal&, const int&, const QEasingCurve&);
     void shootUp();
     void goDown();
+    void startBird();
+    void stopBird();
 private:
     enum class State {
         Up,
@@ -33,6 +35,7 @@ private:
     qreal rotation_;
     qreal y_;
     qreal ground_;
+    QTimer* timer_;
     QPropertyAnimation* yAnimation_;
     QPropertyAnimation* rotateAnimation_;
 };

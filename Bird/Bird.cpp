@@ -9,11 +9,11 @@
 
 Bird::Bird() {
     setPixmap(QPixmap("./img/bird_up.png"));
-    QTimer *timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, [=]() {
+    timer_ = new QTimer(this);
+    connect(timer_, &QTimer::timeout, [=]() {
         changePixmap();
     });
-    timer->start(130);
+    timer_->start(130);
 
     ground_ = scenePos().y() + 220;
 
@@ -22,9 +22,12 @@ Bird::Bird() {
     yAnimation_->setEndValue(ground_);
     yAnimation_->setEasingCurve(QEasingCurve::InQuad);
     yAnimation_->setDuration(1000);
-    yAnimation_->start();
 
     rotateAnimation_ = new QPropertyAnimation(this, "rotation", this);
+}
+
+void Bird::startBird() {
+    yAnimation_->start();
     rotateTo(90, 1000, QEasingCurve::InQuad);
 }
 
@@ -106,4 +109,8 @@ void Bird::goDown() {
 
         rotateTo(90, 1000, QEasingCurve::InQuad);
     }
+}
+
+void Bird::stopBird() {
+    timer_->stop();
 }
