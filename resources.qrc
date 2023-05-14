@@ -1,5 +1,12 @@
 <RCC>
     <qresource>
-        <file>img/Flappy.png</file>
+        <file>img/background_day.png</file>
+        <file>img/background_night.png</file>
+        <file>img/bird_down.png</file>
+        <file>img/bird_middle.png</file>
+        <file>img/bird_up.png</file>
+        <file>img/bottomPillar.png</file>
+        <file>img/topPillar.png</file>
+
     </qresource>
 </RCC>

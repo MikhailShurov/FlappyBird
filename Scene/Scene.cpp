@@ -93,6 +93,7 @@ void Scene::spawnPillars() {
         connect(pillarGroup_, &Pillar::stopGame, [=]() {
             stopGame();
         });
+
         addItem(pillarGroup_);
     });
 }

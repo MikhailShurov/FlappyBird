@@ -4,7 +4,9 @@
 
 #include "Pillar.h"
 #include "../Bird/Bird.h"
+#include "../Bird/BirdAI.h"
 #include "../Scene/Scene.h"
+#include "../Scene/SceneAI.h"
 #include <QPropertyAnimation>
 #include <QGraphicsItem>
 #include <QRandomGenerator>
@@ -63,9 +65,17 @@ Pillar::~Pillar() noexcept {
 bool Pillar::collideWithBird() {
     QList<QGraphicsItem*> currentCollides = topPillar->collidingItems();
     currentCollides.append(bottomPillar_->collidingItems());
-    return std::any_of(currentCollides.begin(), currentCollides.end(), [](QGraphicsItem* item) {
-        return dynamic_cast<Bird*>(item) != nullptr;
-    });
+    for(auto* item : currentCollides) {
+        if (dynamic_cast<Bird*>(item) != nullptr) {
+            return true;
+        } else if (dynamic_cast<BirdAI*>(item) != nullptr) {
+            QGraphicsScene* sc = scene();
+            SceneAI* scai = dynamic_cast<SceneAI*>(sc);
+            delete item;
+            return true;
+        }
+    }
+    return false;
 }
 
 void Pillar::stopPillar() {
@@ -76,7 +86,13 @@ void Pillar::checkIfBirdPass() {
     if (this->mapToScene(QPointF(0, 0)).x() < 0 && !birdPass_) {
         birdPass_ = true;
         QGraphicsScene* scene_ = scene();
-        Scene* scene1 = dynamic_cast<Scene*>(scene_);
-        scene1->incrementScore();
+
+        if (dynamic_cast<Scene*>(scene_) == nullptr) {
+            SceneAI* scene1 = dynamic_cast<SceneAI*>(scene_);
+            scene1->incrementScore();
+        } else {
+            Scene* scene1 = dynamic_cast<Scene*>(scene_);
+            scene1->incrementScore();
+        }
     }
 }
