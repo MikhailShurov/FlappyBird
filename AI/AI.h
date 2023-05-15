@@ -5,17 +5,16 @@
 #ifndef FLAPPYBIRD_AI_H
 #define FLAPPYBIRD_AI_H
 
+#include <vector>
 
 class AI {
 public:
     AI();
 //    bool needJump();
-    int getEfficenty() const;
-    void setEfficenty(const int&);
+    std::vector<double> getWeights() const;
 private:
-    double * weights_ = new double[3];
+    std::vector<double> weights_;
     void activate();
-    int efficenty_;
 };
 
 

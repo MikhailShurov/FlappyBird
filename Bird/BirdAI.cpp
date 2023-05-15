@@ -33,10 +33,11 @@ BirdAI::BirdAI() : timeCreated_(std::time(nullptr)) {
 }
 
 BirdAI::~BirdAI() noexcept {
-    // ToDo Разобраться, зачем я сделал этот гениальный мув ниже
-    ai_->setEfficenty(std::time(nullptr) - timeCreated_);
-    qDebug() << "Bird destroyed, efficenty is " + QString::number(ai_->getEfficenty());
-    emit(saveEfficenty(this, ai_->getEfficenty()));
+    // ToDo write destructor for BirdAI
+//    delete yAnimation_;
+//    delete rotateAnimation_;
+//    delete timer_;
+//    delete ai_;
 }
 
 qreal BirdAI::rotation() const {
@@ -117,4 +118,12 @@ void BirdAI::goDown() {
 
         rotateTo(90, 1000, QEasingCurve::InQuad);
     }
+}
+
+void BirdAI::fixEfficenty() {
+    efficenty_ = std::time(nullptr) - timeCreated_;
+}
+
+int BirdAI::getEfficenty() const {
+    return efficenty_;
 }

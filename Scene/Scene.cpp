@@ -57,7 +57,6 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 void Scene::restartGame() {
-    // Todo define Scene::restartGame
     score_ = 0;
     QList<QGraphicsItem*> itemsOnScene = this->items();
     for (auto* item : itemsOnScene) {

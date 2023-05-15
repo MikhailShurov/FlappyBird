@@ -25,8 +25,8 @@ public slots:
     void rotateTo(const qreal&, const int&, const QEasingCurve&);
     void shootUp();
     void goDown();
-signals:
-    void saveEfficenty(BirdAI*, int);
+    void fixEfficenty();
+    int getEfficenty() const;
 
 private:
     enum class State {
@@ -43,6 +43,7 @@ private:
     QPropertyAnimation* yAnimation_;
     QPropertyAnimation* rotateAnimation_;
     std::time_t timeCreated_;
+    int efficenty_;
 };
 
 #endif //FLAPPYBIRD_BIRDAI_H

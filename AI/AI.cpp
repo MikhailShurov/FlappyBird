@@ -3,23 +3,19 @@
 //
 
 #include "AI.h"
-#include <QDebug>
+#include <vector>
 #include <random>
 
-AI::AI() : efficenty_(23){
+AI::AI(){
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<double> dis(0.0, 1.0);
 
     for (int i = 0; i < 3; ++ i) {
-        weights_[i] = dis(gen);
+        weights_.push_back(dis(gen));
     }
 }
 
-int AI::getEfficenty() const{
-    return efficenty_;
-}
-
-void AI::setEfficenty(const int& newEfficenty) {
-    efficenty_ = newEfficenty;
+std::vector<double> AI::getWeights() const {
+    return weights_;
 }

@@ -20,33 +20,38 @@ SceneAI::SceneAI(QObject *parent) : score_(0) {
 }
 
 void SceneAI::createNewGeneration() {
+    qDebug() << "new generation created";
+    timer_ = new QTimer(this);
 
     int lower = -sceneRect().height() / 2.5;
     int upper = sceneRect().height() / 2.5;
-    for (int i = 0; i < 10; ++ i) {
+
+    for (int i = 0; i < 15; ++ i) {
         int birdY = QRandomGenerator::global()->bounded(lower, upper);
         BirdAI* bird = new BirdAI();
-        // Todo Написать функцию остановки игры, если birds_.size() == 0
-        connect(bird, &BirdAI::saveEfficenty, this, &SceneAI::printBirdScoreToConsole);
         bird->setPos(QPointF(0, birdY));
         birds_.append(bird);
         addItem(bird);
     }
 
-    spawnPillars();
-
-    timer_->start(1500);
+    startGame();
 }
 
 void SceneAI::spawnPillars() {
-    timer_ = new QTimer(this);
-
     connect(timer_, &QTimer::timeout, [=]() {
-        pillarGroup_ = new Pillar();
-        connect(pillarGroup_, &Pillar::stopGame, [=]() {
-
+        bool deleteBird = false;
+        connect(pillarGroup_, &Pillar::destroyBird, [=](BirdAI* birdAi) {
+            printBirdScoreToConsole(birdAi);
         });
 
+
+        if (birds_.size() == 0) {
+            stopGame();
+            deletePillars();
+            createNewGeneration();
+        }
+
+        pillarGroup_ = new Pillar();
         addItem(pillarGroup_);
     });
 }
@@ -55,12 +60,35 @@ void SceneAI::incrementScore() {
     ++score_;
 }
 
-void SceneAI::recreateGeneration() {
-    createNewGeneration();
+void SceneAI::printBirdScoreToConsole(BirdAI* birdAi) {
+    birdAi->fixEfficenty();
+    qDebug() << "bird efficenty: " << QString::number(birdAi->getEfficenty());
+    birds_.removeAll(birdAi);
+    delete birdAi;
 }
 
-void SceneAI::printBirdScoreToConsole(BirdAI* birdAi, int score) {
-    birds_.removeAll(birdAi);
-    QString out = "Destroed some bird, birds_.size() = " + QString::number(birds_.size());
-    qDebug() << out;
+void SceneAI::stopGame() {
+    QList<QGraphicsItem*> items = this->items();
+    timer_->stop();
+    for (auto* item : items) {
+        Pillar* pillar = dynamic_cast<Pillar*>(item);
+        if (pillar) {
+            pillar->stopPillar();
+        }
+    }
+}
+
+void SceneAI::startGame() {
+    timer_->start(1500);
+    spawnPillars();
+}
+
+void SceneAI::deletePillars() {
+    QList<QGraphicsItem*> items = this->items();
+    for (auto* item : items) {
+        Pillar* pillar = dynamic_cast<Pillar*>(item);
+        if (pillar) {
+            delete pillar;
+        }
+    }
 }
