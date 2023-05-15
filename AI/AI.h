@@ -5,16 +5,17 @@
 #ifndef FLAPPYBIRD_AI_H
 #define FLAPPYBIRD_AI_H
 
-#include <vector>
+#include <QList>
 
 class AI {
 public:
     AI();
-//    bool needJump();
-    std::vector<double> getWeights() const;
+    AI(const QList<double>&);
+    bool needJump(double&, double&, double&);
+    QList<double> getWeights() const;
 private:
-    std::vector<double> weights_;
-    void activate();
+    QList<double> weights_;
+    bool activate(double &);
 };
 
 

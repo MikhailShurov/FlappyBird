@@ -3,7 +3,7 @@
 //
 
 #include "AI.h"
-#include <vector>
+#include <cmath>
 #include <random>
 
 AI::AI(){
@@ -12,10 +12,28 @@ AI::AI(){
     std::uniform_real_distribution<double> dis(0.0, 1.0);
 
     for (int i = 0; i < 3; ++ i) {
-        weights_.push_back(dis(gen));
+        weights_.append(dis(gen));
     }
 }
 
-std::vector<double> AI::getWeights() const {
+AI::AI(const QList<double> &newWeights) {
+    weights_ = newWeights;
+}
+
+QList<double> AI::getWeights() const {
     return weights_;
+}
+
+bool AI::activate(double &x) {
+    double normalized = 1 / (1 + exp(-x));
+    if (normalized >= 0.5) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool AI::needJump(double &distanceX, double &distanceTopY, double &distanceBottomY) {
+    double result = distanceX*weights_[0] + distanceTopY*weights_[1] + distanceBottomY*weights_[2];
+    return activate(result);
 }

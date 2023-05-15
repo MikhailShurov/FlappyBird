@@ -26,7 +26,7 @@ private:
     Pillar* pillarGroup_;
     QTimer* timer_;
     int score_;
-//    QList<QPair<BirdAI*, int>> lastEpochResults_;
+    QList<QPair<QList<int>, int>> lastEpochResults_;
 protected:
     void spawnPillars();
 public slots:
