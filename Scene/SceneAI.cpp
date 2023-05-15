@@ -39,7 +39,7 @@ void SceneAI::createNewGeneration() {
 
 void SceneAI::spawnPillars() {
     connect(timer_, &QTimer::timeout, [=]() {
-        bool deleteBird = false;
+        pillarGroup_ = new Pillar();
         connect(pillarGroup_, &Pillar::destroyBird, [=](BirdAI* birdAi) {
             printBirdScoreToConsole(birdAi);
         });
@@ -51,7 +51,6 @@ void SceneAI::spawnPillars() {
             createNewGeneration();
         }
 
-        pillarGroup_ = new Pillar();
         addItem(pillarGroup_);
     });
 }

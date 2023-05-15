@@ -33,11 +33,10 @@ BirdAI::BirdAI() : timeCreated_(std::time(nullptr)) {
 }
 
 BirdAI::~BirdAI() noexcept {
-    // ToDo write destructor for BirdAI
-//    delete yAnimation_;
-//    delete rotateAnimation_;
-//    delete timer_;
-//    delete ai_;
+    delete yAnimation_;
+    delete rotateAnimation_;
+    delete timer_;
+    delete ai_;
 }
 
 qreal BirdAI::rotation() const {

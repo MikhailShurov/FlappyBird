@@ -32,7 +32,7 @@ Pillar::Pillar() : birdPass_(false) {
     setPos(QPointF(0, 0) + QPointF(260 + startX, y_));
 
     xAnimation_->setStartValue(260 + startX);
-    xAnimation_->setEndValue(-500);
+    xAnimation_->setEndValue(-600);
     xAnimation_->setEasingCurve(QEasingCurve::Linear);
     xAnimation_->setDuration(3500);
     xAnimation_->start();
@@ -65,7 +65,7 @@ void Pillar::collideWithBird() {
     currentCollides.append(bottomPillar_->collidingItems());
     for(auto* item : currentCollides) {
         if (dynamic_cast<Bird*>(item) != nullptr) {
-            emit stopGame();
+            emit(stopGame());
         } else if (dynamic_cast<BirdAI*>(item) != nullptr) {
             BirdAI* bird = dynamic_cast<BirdAI*>(item);
             emit(destroyBird(bird));
