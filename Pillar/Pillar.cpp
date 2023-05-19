@@ -34,7 +34,7 @@ Pillar::Pillar() : birdPass_(false) {
     xAnimation_->setStartValue(260 + startX);
     xAnimation_->setEndValue(-600);
     xAnimation_->setEasingCurve(QEasingCurve::Linear);
-    xAnimation_->setDuration(3500);
+    xAnimation_->setDuration(4500);
     xAnimation_->start();
 
     connect(xAnimation_, &QPropertyAnimation::finished, [=]() {

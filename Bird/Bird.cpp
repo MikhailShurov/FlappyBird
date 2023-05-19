@@ -36,6 +36,7 @@ qreal Bird::rotation() const {
 }
 
 qreal Bird::y() const {
+//    qDebug() << y_;
     return y_;
 }
 

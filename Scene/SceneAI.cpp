@@ -20,7 +20,7 @@ SceneAI::SceneAI(QObject *parent) : score_(0) {
 }
 
 void SceneAI::createNewGeneration() {
-    qDebug() << "new generation created";
+//    qDebug() << "new generation created";
     timer_ = new QTimer(this);
 
     int lower = -sceneRect().height() / 2.5;
@@ -61,7 +61,7 @@ void SceneAI::incrementScore() {
 
 void SceneAI::printBirdScoreToConsole(BirdAI* birdAi) {
     birdAi->fixEfficenty();
-    qDebug() << "bird efficenty: " << QString::number(birdAi->getEfficenty());
+//    qDebug() << "bird efficenty: " << QString::number(birdAi->getEfficenty());
     birds_.removeAll(birdAi);
     delete birdAi;
 }
@@ -78,7 +78,7 @@ void SceneAI::stopGame() {
 }
 
 void SceneAI::startGame() {
-    timer_->start(1500);
+    timer_->start(1000);
     spawnPillars();
 }
 
