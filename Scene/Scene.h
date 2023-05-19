@@ -17,6 +17,10 @@ public:
     void restartGame();
     void stopGame();
     void incrementScore();
+
+public slots:
+    void printDataToConsole();
+
 private:
     Bird* bird_;
     Pillar* pillarGroup_;
@@ -25,9 +29,13 @@ private:
         GameOff,
         GameRestart
     };
+
+
     gameStatus gameStatus_;
     QTimer* timer_;
+    QTimer* eachFrame_;
     int score_;
+    Pillar* getClosestPillar();
 protected:
     void keyPressEvent(QKeyEvent*) override;
     void mousePressEvent(QGraphicsSceneMouseEvent*) override;

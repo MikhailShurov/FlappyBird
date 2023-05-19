@@ -91,3 +91,11 @@ void Pillar::checkIfBirdPass() {
         }
     }
 }
+
+int Pillar::getTopOfInterval() const {
+    return y_ + 60;
+}
+
+int Pillar::getBottomOfInterval() const {
+    return y_ - 60;
+}

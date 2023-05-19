@@ -17,6 +17,8 @@ public:
     ~Pillar();
     qreal x() const;
     void stopPillar();
+    int getTopOfInterval() const;
+    int getBottomOfInterval() const;
 signals:
     void stopGame();
     void destroyBird(BirdAI*);

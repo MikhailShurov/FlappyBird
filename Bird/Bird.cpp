@@ -77,6 +77,7 @@ void Bird::changePixmap() {
 }
 
 void Bird::shootUp() {
+    changeBirdStatus(birdStatus::fly);
     yAnimation_->stop();
     rotateAnimation_->stop();
 
@@ -90,7 +91,8 @@ void Bird::shootUp() {
     yAnimation_->setEasingCurve(QEasingCurve::OutQuad);
     yAnimation_->setDuration(300);
     connect(yAnimation_, &QPropertyAnimation::finished, [=](){
-       goDown();
+        changeBirdStatus(birdStatus::fall);
+        goDown();
     });
     yAnimation_->start();
 
@@ -114,4 +116,8 @@ void Bird::goDown() {
 
 void Bird::stopBird() {
     timer_->stop();
+}
+
+void Bird::changeBirdStatus(birdStatus newBirdStatus) {
+    birdStatus_ = newBirdStatus;
 }

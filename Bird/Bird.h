@@ -13,10 +13,18 @@ class Bird: public QObject, public QGraphicsPixmapItem{
     Q_OBJECT
     Q_PROPERTY(qreal rotation READ rotation WRITE setRotation);
     Q_PROPERTY(qreal y READ y WRITE setY);
+
 public:
     Bird();
     qreal rotation() const;
     qreal y() const;
+
+    enum class birdStatus {
+        fly,
+        fall
+    };
+    birdStatus birdStatus_;
+
 public slots:
     void setRotation(const qreal&);
     void setY(const qreal&);
@@ -27,6 +35,7 @@ public slots:
     void stopBird();
 
 protected:
+    void changeBirdStatus(birdStatus);
     enum class State {
         Up,
         Down
