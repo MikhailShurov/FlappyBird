@@ -28,7 +28,8 @@ Pillar::Pillar() : birdPass_(false) {
     xAnimation_ = new QPropertyAnimation(this, "x", this);
 
     y_ = QRandomGenerator::global()->bounded(-100, 100);
-    int startX = QRandomGenerator::global()->bounded(100);
+//    int startX = QRandomGenerator::global()->bounded(100);
+    int startX = 100;
     setPos(QPointF(0, 0) + QPointF(260 + startX, y_));
 
     xAnimation_->setStartValue(260 + startX);

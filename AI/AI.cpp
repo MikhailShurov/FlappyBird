@@ -9,7 +9,11 @@ AI::AI() {
     std::mt19937 gen(rd());
     std::uniform_real_distribution<double> dis(-30.0, 30.0);
     weights = {dis(gen), dis(gen), dis(gen)};
-//    qDebug() << weights;
+//    std::ofstream outfile("weights.txt", std::ios_base::app);
+//    for (int i = 0; i < weights.size(); i++) {
+//        outfile << weights[i] << " ";
+//    }
+//    outfile << "\n";
 }
 
 AI::AI(std::vector<double> weights) {
@@ -51,6 +55,8 @@ void AI::mutate() {
 }
 
 std::pair<AI, AI> AI::crossover(AI parent1, AI parent2) {
+    // ToDo call mutate function
+
     std::vector<double> parent1Weights = parent1.getWeights();
     std::vector<double> parent2Weights = parent2.getWeights();
     int crossoverPoint = std::rand() % parent1Weights.size();

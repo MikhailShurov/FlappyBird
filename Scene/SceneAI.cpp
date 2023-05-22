@@ -78,7 +78,7 @@ void SceneAI::incrementScore() {
 
 void SceneAI::printBirdScoreToConsole(BirdAI* birdAi) {
     birdAi->fixEfficenty();
-//    qDebug() << "bird efficenty: " << QString::number(birdAi->getEfficenty());
+    qDebug() << "bird efficenty: " << QString::number(birdAi->getEfficenty());
     birds_.removeAll(birdAi);
     delete birdAi;
 }
