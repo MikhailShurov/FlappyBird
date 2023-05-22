@@ -8,7 +8,8 @@
 #include <QDebug>
 #include <QGraphicsScene>
 
-BirdAI::BirdAI() : timeCreated_(std::time(nullptr)) {
+BirdAI::BirdAI(const double& spawnY) : timeCreated_(std::time(nullptr)) {
+    y_ = spawnY;
     setPixmap(QPixmap("../img/bird_up.png"));
     timer_ = new QTimer(this);
     connect(timer_, &QTimer::timeout, [=]() {
@@ -16,20 +17,19 @@ BirdAI::BirdAI() : timeCreated_(std::time(nullptr)) {
     });
     timer_->start(130);
 
-    ground_ = scenePos().y() + 220;
-
     ai_ = new AI();
+    ground_ = 220;
 
     yAnimation_ = new QPropertyAnimation(this, "y", this);
-    yAnimation_->setStartValue(scenePos().y());
+    yAnimation_->setStartValue(y_);
     yAnimation_->setEndValue(ground_);
     yAnimation_->setEasingCurve(QEasingCurve::InQuad);
     yAnimation_->setDuration(1000);
 
     rotateAnimation_ = new QPropertyAnimation(this, "rotation", this);
 
-//    yAnimation_->start();
-//    rotateTo(90, 1000, QEasingCurve::InQuad);
+    yAnimation_->start();
+    rotateTo(90, 1000, QEasingCurve::InQuad);
 }
 
 BirdAI::~BirdAI() noexcept {

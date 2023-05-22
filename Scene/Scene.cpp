@@ -112,7 +112,7 @@ void Scene::spawnPillars() {
 
 void Scene::incrementScore() {
     ++score_;
-//    qDebug() << score_;
+    qDebug() << score_;
 }
 
 Pillar* Scene::getClosestPillar() {

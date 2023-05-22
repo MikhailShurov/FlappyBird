@@ -15,10 +15,11 @@ Q_OBJECT
     Q_PROPERTY(qreal rotation READ rotation WRITE setRotation);
     Q_PROPERTY(qreal y READ y WRITE setY);
 public:
-    BirdAI();
+    BirdAI(const double &);
     ~BirdAI();
     qreal rotation() const;
     qreal y() const;
+    AI* ai_;
 public slots:
     void setRotation(const qreal&);
     void setY(const qreal&);
@@ -27,14 +28,13 @@ public slots:
     void goDown();
     void fixEfficenty();
     int getEfficenty() const;
-
 private:
     enum class State {
         Up,
         Down
     };
     void changePixmap();
-    AI* ai_;
+
     State currentState_;
     qreal rotation_;
     qreal y_;

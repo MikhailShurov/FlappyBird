@@ -14,11 +14,11 @@ MainWindow::~MainWindow() = default;
 
 void MainWindow::setup() {
 // uncomment if you need usual mode
-    Scene* scene = new Scene(this);
-    QGraphicsView* view = new QGraphicsView(scene);
+//    Scene* scene = new Scene(this);
+//    QGraphicsView* view = new QGraphicsView(scene);
 
 // AI mode
-//    SceneAI* sceneAI = new SceneAI(this);
-//    QGraphicsView* view = new QGraphicsView(sceneAI);
+    SceneAI* sceneAI = new SceneAI(this);
+    QGraphicsView* view = new QGraphicsView(sceneAI);
     setCentralWidget(view);
 }

@@ -24,12 +24,16 @@ private:
     const int EPOCH = 50;
     QList<BirdAI*> birds_;
     Pillar* pillarGroup_;
+    QList<Pillar*> allPillars_;
     QTimer* timer_;
+    QTimer* eachFrame_;
     int score_;
     QList<QPair<QList<int>, int>> lastEpochResults_;
 protected:
     void spawnPillars();
 public slots:
+    void checkBirdsJump();
+    void removeFirstPillar();
     void printBirdScoreToConsole(BirdAI*);
 };
 

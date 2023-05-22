@@ -22,6 +22,7 @@ public:
 signals:
     void stopGame();
     void destroyBird(BirdAI*);
+    void pillarDeleted();
 public slots:
     void setX(const qreal&);
 private:

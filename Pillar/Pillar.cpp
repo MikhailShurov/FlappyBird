@@ -58,6 +58,7 @@ Pillar::~Pillar() noexcept {
     delete xAnimation_;
     delete topPillar;
     delete bottomPillar_;
+    emit(pillarDeleted());
 }
 
 void Pillar::collideWithBird() {

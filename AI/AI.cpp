@@ -1,147 +1,83 @@
-//
-// Created by mikhail on 14/05/23.
-//
-
 #include "AI.h"
-#include <cmath>
-#include <random>
-#include <string>
-#include <sstream>
 #include <fstream>
-#include <iostream>
+#include <random>
+#include <cmath>
+#include <QDebug>
 
 AI::AI() {
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_real_distribution<double> dis(0.0, 1.0);
-
-    // generate 1-2 weights
-    for (int i = 0; i < 4; ++i) {
-        std::vector<double> neuronWeights;
-        for (int j = 0; j < 3; ++j) {
-            double weight = dis(gen);
-            std::cout << weight << " ";
-            neuronWeights.push_back(weight);
-        }
-        std::cout << "\n";
-        weights_1_2.push_back(neuronWeights);
-    }
-
-    std::cout << "\n\n";
-
-    // generate 2-3 weights
-    for (int i = 0; i < 3; ++i) {
-        std::vector<double> neuronWeights;
-        for (int j = 0; j < 1; ++j) {
-            double weight = dis(gen);
-            std::cout << weight << " ";
-            neuronWeights.push_back(weight);
-        }
-        std::cout << "\n";
-        weights_2_3.push_back(neuronWeights);
-    }
-
-    std::cout << "\n\n";
+    std::uniform_real_distribution<double> dis(-30.0, 30.0);
+    weights = {dis(gen), dis(gen), dis(gen)};
+//    qDebug() << weights;
 }
 
-double AI::activate(double &x) {
-    double normalized = 1 / (1 + exp(-x));
-    return normalized;
+AI::AI(std::vector<double> weights) {
+    this->weights = weights;
+    std::ofstream outfile("weights.txt", std::ios_base::app);
+    for (int i = 0; i < weights.size(); i++) {
+        outfile << weights[i] << " ";
+    }
+    outfile << "\n";
+    outfile.close();
 }
 
-void AI::readfromFile() {
-    std::ifstream fin("output.txt", std::ios::in);
-    std::string str;
-    while (std::getline(fin, str)) {
-        std::vector<double> line;
-        std::istringstream sstream(str);
-        double x, top, bottom, ground;
-        int answer;
-        sstream >> x >> top >> bottom >> ground >> answer;
-        line.push_back(x);
-        line.push_back(top);
-        line.push_back(bottom);
-        line.push_back(ground);
-        data.push_back(std::make_pair(line, answer));
-    }
-    std::cout << data.size() << " -- data size\n";
+void AI::activate(double input1, double input2, double input3) {
+    double sum = weights[0] * input1 + weights[1] * input2 + weights[2] * input3;
+    double output = tanh(sum);
 }
 
-void AI::teachAI() {
-    std::cout << data.size() << " -- data size\n";
-    for (int e = 0; e < EPOCH; ++ e) {
-        for (long long i = 0; i < data.size(); ++i) {
-            hiddenNeuronValues.clear();
-            double firstVal = 0, secondVal = 0, thirdVal = 0, answer = 0;
-            for (int j = 0; j < weights_1_2.size(); ++j) {
-                firstVal += weights_1_2[j][0] * data[i].first[j];
-                secondVal += weights_1_2[j][1] * data[i].first[j];
-                thirdVal += weights_1_2[j][2] * data[i].first[j];
-            }
+std::vector<double> AI::getWeights() {
+    return weights;
+}
 
-            hiddenNeuronValues.push_back(firstVal);
-            hiddenNeuronValues.push_back(secondVal);
-            hiddenNeuronValues.push_back(thirdVal);
+void AI::setWeights(std::vector<double> weights) {
+    this->weights = weights;
+}
 
-            for (int j = 0; j < weights_2_3.size(); ++j) {
-                for (int k = 0; k < weights_2_3[j].size(); ++k) {
-                    answer += weights_2_3[j][k] * activate(firstVal);
-                    answer += weights_2_3[j][k] * activate(secondVal);
-                    answer += weights_2_3[j][k] * activate(thirdVal);
-                }
-            }
+void AI::mutate() {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<double> dis(-1.0, 1.0);
+    int index = std::rand() % weights.size();
+    double mutationAmount = dis(gen);
+    weights[index] += mutationAmount;
+    // Clamp weight to [-30, 30]
+    if (weights[index] < -30.0) {
+        weights[index] = -30.0;
+    } else if (weights[index] > 30.0) {
+        weights[index] = 30.0;
+    }
+}
 
-            answer = activate(answer);
-
-            // Here we have 3 hidden neuron values and result
-            // So we can calculate error
-
-            double error = data[i].second - answer;                 // error
-            double localGrad = error * (answer * (1 - answer));     // local gradient
-
-            // Now we can fix all weights
-
-            // Fixing last weights
-            for (int j = 0; j < weights_2_3.size(); ++i) {
-                for (int k = 0; k < weights_2_3[j].size(); ++k) {
-                    weights_2_3[j][k] = weights_2_3[j][k] - LR * localGrad * hiddenNeuronValues[j];
-                }
-            }
-
-            // calculate next-level local gradients
-            double localGrad1, localGrad2, localGrad3;
-            localGrad1 = localGrad * weights_2_3[0][0] * hiddenNeuronValues[0] * (1 - hiddenNeuronValues[0]);
-            localGrad2 = localGrad * weights_2_3[1][0] * hiddenNeuronValues[1] * (1 - hiddenNeuronValues[1]);
-            localGrad3 = localGrad * weights_2_3[2][0] * hiddenNeuronValues[2] * (1 - hiddenNeuronValues[2]);
-
-            std::vector<double> localgrads;
-            localgrads.push_back(localGrad1);
-            localgrads.push_back(localGrad2);
-            localgrads.push_back(localGrad3);
-
-            for (int j = 0; j < weights_1_2.size(); ++j) {
-                for (int k = 0; k < weights_1_2[j].size(); ++k) {
-                    weights_1_2[j][k] = weights_1_2[j][k] - LR * data[i].first[j] * localgrads[j];
-                }
-            }
+std::pair<AI, AI> AI::crossover(AI parent1, AI parent2) {
+    std::vector<double> parent1Weights = parent1.getWeights();
+    std::vector<double> parent2Weights = parent2.getWeights();
+    int crossoverPoint = std::rand() % parent1Weights.size();
+    std::vector<double> child1Weights;
+    std::vector<double> child2Weights;
+    for (int i = 0; i < parent1Weights.size(); i++) {
+        if (i <= crossoverPoint) {
+            child1Weights.push_back(parent1Weights[i]);
+            child2Weights.push_back(parent2Weights[i]);
+        } else {
+            child1Weights.push_back(parent2Weights[i]);
+            child2Weights.push_back(parent1Weights[i]);
         }
     }
-
-    // 3 for first, 3 for second etc
-    for (int i = 0; i < weights_1_2.size(); ++ i) {
-        for (int j = 0; j < weights_1_2[i].size(); ++ j) {
-            std::cout << weights_1_2[i][j] << " ";
-        }
-        std::cout << "\n";
+    if (std::rand() % 2 == 0) {
+        child1Weights = parent1.getWeights();
+        child2Weights = parent2.getWeights();
     }
-
-    std::cout << "\n\n";
-
-    std::cout << weights_2_3.size() << "sizee\n";
-    for (int i = 0; i < weights_2_3.size(); ++ i) {
-        for (int j = 0; j < weights_2_3[i].size(); ++ j) {
-            std::cout << weights_2_3[i][j] << " ";
-        }
-        std::cout << "\n";
+    if (std::rand() % 2 == 0) {
+        child1Weights = parent2.getWeights();
+        child2Weights = parent1.getWeights();
     }
+    return std::make_pair(AI(child1Weights), AI(child2Weights));
+}
+
+bool AI::needJump(double input1, double input2, double input3) {
+    double sum = weights[0] * input1 + weights[1] * input2 + weights[2] * input3;
+    double output = tanh(sum);
+    return output > 0.5;
 }
