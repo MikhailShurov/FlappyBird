@@ -34,7 +34,6 @@ private:
         Down
     };
     void changePixmap();
-
     State currentState_;
     qreal rotation_;
     qreal y_;

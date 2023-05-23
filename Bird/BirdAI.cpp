@@ -29,7 +29,7 @@ BirdAI::BirdAI(const double& spawnY) : timeCreated_(std::time(nullptr)) {
     rotateAnimation_ = new QPropertyAnimation(this, "rotation", this);
 
     yAnimation_->start();
-    rotateTo(90, 1000, QEasingCurve::InQuad);
+//    rotateTo(90, 1000, QEasingCurve::InQuad);
 }
 
 BirdAI::~BirdAI() noexcept {
@@ -101,7 +101,7 @@ void BirdAI::shootUp() {
     });
     yAnimation_->start();
 
-    rotateTo(-20, 300, QEasingCurve::OutQuad);
+//    rotateTo(-20, 300, QEasingCurve::OutQuad);
 }
 
 void BirdAI::goDown() {
@@ -115,7 +115,7 @@ void BirdAI::goDown() {
         yAnimation_->setDuration(1000);
         yAnimation_->start();
 
-        rotateTo(90, 1000, QEasingCurve::InQuad);
+//        rotateTo(90, 1000, QEasingCurve::InQuad);
     }
 }
 

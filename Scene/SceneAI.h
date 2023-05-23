@@ -11,6 +11,7 @@
 #include <QGraphicsScene>
 #include <QTimer>
 #include <vector>
+#include <QStack>
 
 class SceneAI: public  QGraphicsScene{
 public:
@@ -29,6 +30,9 @@ private:
     QTimer* eachFrame_;
     int score_;
     QList<QPair<QList<int>, int>> lastEpochResults_;
+    QStack<std::vector<double>> birdsWeights_;
+    void mutate(std::vector<double>&);
+    std::vector<double> crossover(const std::vector<double>&, const std::vector<double>&);
 protected:
     void spawnPillars();
 public slots:

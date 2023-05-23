@@ -4,7 +4,6 @@
 
 #include "Pillar.h"
 #include "../Bird/Bird.h"
-#include "../Bird/BirdAI.h"
 #include "../Scene/Scene.h"
 #include "../Scene/SceneAI.h"
 #include <QPropertyAnimation>
@@ -19,17 +18,17 @@ Pillar::Pillar() : birdPass_(false) {
     bottomPillar_ = new QGraphicsPixmapItem(QPixmap("./img/bottomPillar.png"));
 
     topPillar->setPos(
-            QPointF(0, 0) - QPointF(topPillar->boundingRect().width() / 2, topPillar->boundingRect().height() + 60));
-    bottomPillar_->setPos(QPointF(0, 0) - QPointF(bottomPillar_->boundingRect().width() / 2, -60));
+            QPointF(0, 0) - QPointF(topPillar->boundingRect().width() / 2, topPillar->boundingRect().height() + 70));
+    bottomPillar_->setPos(QPointF(0, 0) - QPointF(bottomPillar_->boundingRect().width() / 2, -70));
 
     addToGroup(topPillar);
     addToGroup(bottomPillar_);
 
     xAnimation_ = new QPropertyAnimation(this, "x", this);
 
-    y_ = QRandomGenerator::global()->bounded(-100, 100);
+    y_ = QRandomGenerator::global()->bounded(-50, 50);
 //    int startX = QRandomGenerator::global()->bounded(100);
-    int startX = 100;
+    int startX = 300;
     setPos(QPointF(0, 0) + QPointF(260 + startX, y_));
 
     xAnimation_->setStartValue(260 + startX);
@@ -95,9 +94,9 @@ void Pillar::checkIfBirdPass() {
 }
 
 int Pillar::getTopOfInterval() const {
-    return y_ + 60;
+    return y_ + 70;
 }
 
 int Pillar::getBottomOfInterval() const {
-    return y_ - 60;
+    return y_ - 70;
 }
