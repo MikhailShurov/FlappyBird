@@ -34,7 +34,7 @@ void SceneAI::createNewGeneration() {
     int lower = -sceneRect().height() / 2.5;
     int upper = 0;
 
-    for (int i = 0; i < 8; ++ i) {
+    for (int i = 0; i < 20; ++ i) {
 //        int birdY = QRandomGenerator::global()->bounded(lower, upper);
         int birdY = 0;
         BirdAI* bird = new BirdAI(birdY);
@@ -45,16 +45,13 @@ void SceneAI::createNewGeneration() {
             birdsWeights_.push(firstParent);
             std::vector<double> children = crossover(firstParent, secondParent);
             bird->ai_->setWeights(children);
-
-            // ToDo use mutate function
         }
-//        bird->ai_->setWeights({-11.2243, -7.36786, -27.9428});
         bird->setPos(QPointF(0, birdY));
         birds_.append(bird);
         addItem(bird);
     }
     birdsWeights_.clear();
-    qDebug() << score_;
+//    qDebug() << score_;
     score_ = 0;
     startGame();
 }
@@ -77,13 +74,12 @@ void SceneAI::spawnPillars() {
             printBirdScoreToConsole(birdAi);
         });
 
+        addItem(pillarGroup_);
         if (birds_.size() == 0) {
             stopGame();
             deletePillars();
             createNewGeneration();
         }
-
-        addItem(pillarGroup_);
     });
 }
 
@@ -100,6 +96,7 @@ void SceneAI::printBirdScoreToConsole(BirdAI* birdAi) {
 }
 
 void SceneAI::stopGame() {
+    allPillars_.clear();
     QList<QGraphicsItem*> items = this->items();
     timer_->stop();
     for (auto* item : items) {
@@ -133,11 +130,12 @@ void SceneAI::checkBirdsJump() {
     }
     Pillar* closest;
     for (Pillar* pillar: allPillars_) {
-        if (pillar->scenePos().x() > 30) {
+        if (pillar->scenePos().x() > 0) {
             closest = pillar;
             break;
         }
     }
+    closest->changeColor();
 
     for (auto* bird : birds_) {
         if (bird->ai_->needJump(bird->scenePos().y(), abs(bird->scenePos().y() - closest->getTopOfInterval()), abs(bird->scenePos().y() + bird->boundingRect().height() - closest->getBottomOfInterval()))) {
@@ -169,14 +167,13 @@ std::vector<double> SceneAI::crossover(const std::vector<double>& parent1Weights
 void SceneAI::mutate(std::vector<double> &child) {
     std::random_device rd;
     std::mt19937 gen(rd());
-    qDebug() << "Mutation";
-    std::uniform_real_distribution<double> dis(-2.0, 2.0);
+    std::uniform_real_distribution<double> dis(-1.0, 1.0);
     int index = std::rand() % child.size();
     double mutationAmount = dis(gen);
-    child[index] += mutationAmount;
-    if (child[index] < -30.0) {
-        child[index] = -30.0;
-    } else if (child[index] > 30.0) {
-        child[index] = 30.0;
-    }
+    child[index] += child[index] * mutationAmount;
+//    if (child[index] < -30.0) {
+//        child[index] = -30.0;
+//    } else if (child[index] > 30.0) {
+//        child[index] = 30.0;
+//    }
 }

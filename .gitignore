@@ -3,3 +3,4 @@
 .idea
 CMakeLists.txt.user
 output.txt
+weights.txt

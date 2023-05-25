@@ -94,9 +94,13 @@ void Pillar::checkIfBirdPass() {
 }
 
 int Pillar::getTopOfInterval() const {
-    return y_ + 70;
+    return y_ + 40;
 }
 
 int Pillar::getBottomOfInterval() const {
-    return y_ - 70;
+    return y_ - 40;
+}
+
+void Pillar::changeColor() {
+    topPillar->setPixmap(QPixmap("./img/bottomPillar.png"));
 }

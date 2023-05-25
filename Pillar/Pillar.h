@@ -19,6 +19,7 @@ public:
     void stopPillar();
     int getTopOfInterval() const;
     int getBottomOfInterval() const;
+    void changeColor();
 signals:
     void stopGame();
     void destroyBird(BirdAI*);
