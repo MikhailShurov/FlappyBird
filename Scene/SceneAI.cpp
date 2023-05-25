@@ -135,7 +135,7 @@ void SceneAI::checkBirdsJump() {
             break;
         }
     }
-    closest->changeColor();
+//    closest->changeColor();
 
     for (auto* bird : birds_) {
         if (bird->ai_->needJump(bird->scenePos().y(), abs(bird->scenePos().y() - closest->getTopOfInterval()), abs(bird->scenePos().y() + bird->boundingRect().height() - closest->getBottomOfInterval()))) {
@@ -170,7 +170,8 @@ void SceneAI::mutate(std::vector<double> &child) {
     std::uniform_real_distribution<double> dis(-1.0, 1.0);
     int index = std::rand() % child.size();
     double mutationAmount = dis(gen);
-    child[index] += child[index] * mutationAmount;
+//    child[index] += child[index] * mutationAmount;
+    child[index] += mutationAmount;
 //    if (child[index] < -30.0) {
 //        child[index] = -30.0;
 //    } else if (child[index] > 30.0) {

@@ -94,11 +94,11 @@ void Pillar::checkIfBirdPass() {
 }
 
 int Pillar::getTopOfInterval() const {
-    return y_ + 40;
+    return y_ + 70;
 }
 
 int Pillar::getBottomOfInterval() const {
-    return y_ - 40;
+    return y_ - 70;
 }
 
 void Pillar::changeColor() {
