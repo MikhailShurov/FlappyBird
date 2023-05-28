@@ -7,11 +7,12 @@
 #include <QTimer>
 #include <QDebug>
 #include <fstream>
+#include <sstream>
 #include <QGraphicsScene>
 //#include <QMediaPlayer>
 
 
-SceneAI::SceneAI(QObject *parent) : score_(0), gen_(1), needMutation_(true) {
+SceneAI::SceneAI(QObject *parent, bool takeWeightsFromFile) : score_(0), gen_(1), needMutation_(true), takeFromFile_(takeWeightsFromFile) {
     setSceneRect(-width_/2, -height_/2, width_, height_);
 
     eachFrame_ = new QTimer(this);
@@ -69,6 +70,10 @@ void SceneAI::createNewGeneration() {
             std::vector<double> children = crossover(firstParent, secondParent);
             bird->ai_->setWeights(children);
         }
+        if (takeFromFile_) {
+            std::vector<double> weights = readFromFile();
+            bird->ai_->setWeights(weights);
+        }
         bird->setPos(QPointF(0, birdY));
         birds_.append(bird);
         addItem(bird);
@@ -118,7 +123,7 @@ void SceneAI::incrementScore() {
     currentScore_->setText(QString("SCORE: ") + QString::number(score_));
     if (score_ == 100) {
         qDebug() << "Ideal weights:" << birds_[0]->ai_->getWeights();
-        std::ofstream outfile("Ideal weights.txt", std::ios_base::out);
+        std::ofstream outfile("IdealWeights.txt", std::ios_base::out);
         for (int i = 0; i < birds_[0]->ai_->getWeights().size(); i++) {
             outfile << birds_[0]->ai_->getWeights()[i] << " ";
         }
@@ -213,4 +218,16 @@ void SceneAI::mutate(std::vector<double> &child) {
     } else if (child[index] > 30.0) {
         child[index] = 30.0;
     }
+}
+
+std::vector<double> SceneAI::readFromFile() {
+    std::ifstream fin("IdealWeights.txt", std::ios::in);
+
+    std::string line;
+    std::getline(fin, line);
+    std::istringstream sstream(line);
+    double w1 = -1, w2 = -1, w3 = -1;
+    sstream >> w1 >> w2 >> w3;
+    qDebug() << w1 << w2 << w3;
+    return {w1, w2, w3};
 }

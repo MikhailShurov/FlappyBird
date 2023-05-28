@@ -1,11 +1,9 @@
 #include "MainWindow.h"
-#include "Bird/Bird.h"
 #include "Scene/Scene.h"
 #include "Scene/SceneAI.h"
 #include "Scene/MainMenuScene.h"
 #include <QGraphicsView>
 #include <QSizePolicy>
-#include <QDebug>
 
 
 MainWindow::MainWindow()
@@ -16,13 +14,6 @@ MainWindow::MainWindow()
 MainWindow::~MainWindow() = default;
 
 void MainWindow::setup() {
-// Classic mode
-
-//    QGraphicsView* view = new QGraphicsView(scene);
-
-// AI mode
-
-//    QGraphicsView* view = new QGraphicsView(sceneAI);
 
 // MainMenu
     MainMenuScene* menuScene = new MainMenuScene(this);
@@ -51,5 +42,10 @@ void MainWindow::changeScene(const int& index) {
         case 2:
             sceneAi_ = new SceneAI(this);
             view_->setScene(sceneAi_);
+            break;
+        case 3:
+            sceneAi_ = new SceneAI(this, true);
+            view_->setScene(sceneAi_);
+            break;
     }
 }

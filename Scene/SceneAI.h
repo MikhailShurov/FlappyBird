@@ -17,7 +17,7 @@
 
 class SceneAI: public  QGraphicsScene{
 public:
-    explicit SceneAI(QObject *parent = nullptr);
+    explicit SceneAI(QObject *parent = nullptr, bool = false);
     void createNewGeneration();
     void incrementScore();
     void stopGame();
@@ -43,6 +43,8 @@ private:
     const int width_ = 1920;
     const int height_ = 1080;
     bool needMutation_;
+    bool takeFromFile_;
+    std::vector<double> readFromFile();
 protected:
     void spawnPillars();
 public slots:
