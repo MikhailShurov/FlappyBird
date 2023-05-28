@@ -5,6 +5,7 @@
 #ifndef FLAPPYBIRD_PILLAR_H
 #define FLAPPYBIRD_PILLAR_H
 
+#include "../Bird/BirdAI.h"
 #include <QGraphicsItemGroup>
 #include <QPropertyAnimation>
 
@@ -16,8 +17,12 @@ public:
     ~Pillar();
     qreal x() const;
     void stopPillar();
+    int getTopOfInterval() const;
+    int getBottomOfInterval() const;
 signals:
     void stopGame();
+    void destroyBird(BirdAI*);
+    void pillarDeleted();
 public slots:
     void setX(const qreal&);
 private:
@@ -27,7 +32,7 @@ private:
     QPropertyAnimation* xAnimation_;
     QGraphicsPixmapItem *topPillar;
     QGraphicsPixmapItem *bottomPillar_;
-    bool collideWithBird();
+    void collideWithBird();
     void checkIfBirdPass();
 };
 

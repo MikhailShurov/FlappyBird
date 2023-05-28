@@ -5,6 +5,7 @@
 #include "Pillar.h"
 #include "../Bird/Bird.h"
 #include "../Scene/Scene.h"
+#include "../Scene/SceneAI.h"
 #include <QPropertyAnimation>
 #include <QGraphicsItem>
 #include <QRandomGenerator>
@@ -17,22 +18,23 @@ Pillar::Pillar() : birdPass_(false) {
     bottomPillar_ = new QGraphicsPixmapItem(QPixmap("./img/bottomPillar.png"));
 
     topPillar->setPos(
-            QPointF(0, 0) - QPointF(topPillar->boundingRect().width() / 2, topPillar->boundingRect().height() + 60));
-    bottomPillar_->setPos(QPointF(0, 0) - QPointF(bottomPillar_->boundingRect().width() / 2, -60));
+            QPointF(0, 0) - QPointF(topPillar->boundingRect().width() / 2, topPillar->boundingRect().height() + 70));
+    bottomPillar_->setPos(QPointF(0, 0) - QPointF(bottomPillar_->boundingRect().width() / 2, -70));
 
     addToGroup(topPillar);
     addToGroup(bottomPillar_);
 
     xAnimation_ = new QPropertyAnimation(this, "x", this);
 
-    y_ = QRandomGenerator::global()->bounded(100);
-    int startX = QRandomGenerator::global()->bounded(100);
+    y_ = QRandomGenerator::global()->bounded(-50, 50);
+//    int startX = QRandomGenerator::global()->bounded(100);
+    int startX = 300;
     setPos(QPointF(0, 0) + QPointF(260 + startX, y_));
 
     xAnimation_->setStartValue(260 + startX);
-    xAnimation_->setEndValue(-500);
+    xAnimation_->setEndValue(-600);
     xAnimation_->setEasingCurve(QEasingCurve::Linear);
-    xAnimation_->setDuration(3500);
+    xAnimation_->setDuration(4500);
     xAnimation_->start();
 
     connect(xAnimation_, &QPropertyAnimation::finished, [=]() {
@@ -48,9 +50,7 @@ qreal Pillar::x() const {
 void Pillar::setX(const qreal &newX) {
     moveBy(newX - x_, 0);
     checkIfBirdPass();
-    if (collideWithBird()) {
-        emit stopGame();
-    }
+    collideWithBird();
     x_ = newX;
 }
 
@@ -58,14 +58,20 @@ Pillar::~Pillar() noexcept {
     delete xAnimation_;
     delete topPillar;
     delete bottomPillar_;
+    emit(pillarDeleted());
 }
 
-bool Pillar::collideWithBird() {
+void Pillar::collideWithBird() {
     QList<QGraphicsItem*> currentCollides = topPillar->collidingItems();
     currentCollides.append(bottomPillar_->collidingItems());
-    return std::any_of(currentCollides.begin(), currentCollides.end(), [](QGraphicsItem* item) {
-        return dynamic_cast<Bird*>(item) != nullptr;
-    });
+    for(auto* item : currentCollides) {
+        if (dynamic_cast<Bird*>(item) != nullptr) {
+            emit(stopGame());
+        } else if (dynamic_cast<BirdAI*>(item) != nullptr) {
+            BirdAI* bird = dynamic_cast<BirdAI*>(item);
+            emit(destroyBird(bird));
+        }
+    }
 }
 
 void Pillar::stopPillar() {
@@ -76,7 +82,21 @@ void Pillar::checkIfBirdPass() {
     if (this->mapToScene(QPointF(0, 0)).x() < 0 && !birdPass_) {
         birdPass_ = true;
         QGraphicsScene* scene_ = scene();
-        Scene* scene1 = dynamic_cast<Scene*>(scene_);
-        scene1->incrementScore();
+
+        if (dynamic_cast<Scene*>(scene_) == nullptr) {
+            SceneAI* scene1 = dynamic_cast<SceneAI*>(scene_);
+            scene1->incrementScore();
+        } else {
+            Scene* scene1 = dynamic_cast<Scene*>(scene_);
+            scene1->incrementScore();
+        }
     }
+}
+
+int Pillar::getTopOfInterval() const {
+    return y_ + 70;
+}
+
+int Pillar::getBottomOfInterval() const {
+    return y_ - 70;
 }

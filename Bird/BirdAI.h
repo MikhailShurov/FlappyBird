@@ -1,41 +1,34 @@
 //
-// Created by mikhail on 10/05/23.
+// Created by mikhail on 14/05/23.
 //
 
-#ifndef FLAPPYBIRD_BIRD_H
-#define FLAPPYBIRD_BIRD_H
+#ifndef FLAPPYBIRD_BIRDAI_H
+#define FLAPPYBIRD_BIRDAI_H
 
+#include "../AI/AI.h"
 #include <QObject>
 #include <QGraphicsPixmapItem>
 #include <QPropertyAnimation>
 
-class Bird: public QObject, public QGraphicsPixmapItem{
-    Q_OBJECT
+class BirdAI: public QObject, public QGraphicsPixmapItem{
+Q_OBJECT
     Q_PROPERTY(qreal rotation READ rotation WRITE setRotation);
     Q_PROPERTY(qreal y READ y WRITE setY);
-
 public:
-    Bird();
+    BirdAI(const double &);
+    ~BirdAI();
     qreal rotation() const;
     qreal y() const;
-
-    enum class birdStatus {
-        fly,
-        fall
-    };
-    birdStatus birdStatus_;
-
+    AI* ai_;
 public slots:
     void setRotation(const qreal&);
     void setY(const qreal&);
     void rotateTo(const qreal&, const int&, const QEasingCurve&);
     void shootUp();
     void goDown();
-    void startBird();
-    void stopBird();
-
-protected:
-    void changeBirdStatus(birdStatus);
+    void fixEfficenty();
+    int getEfficenty() const;
+private:
     enum class State {
         Up,
         Down
@@ -48,7 +41,8 @@ protected:
     QTimer* timer_;
     QPropertyAnimation* yAnimation_;
     QPropertyAnimation* rotateAnimation_;
+    std::time_t timeCreated_;
+    int efficenty_;
 };
 
-
-#endif //FLAPPYBIRD_BIRD_H
+#endif //FLAPPYBIRD_BIRDAI_H

@@ -1,13 +1,15 @@
 //
-// Created by mikhail on 10/05/23.
+// Created by mikhail on 14/05/23.
 //
 
-#include "Bird.h"
+#include "BirdAI.h"
+
 #include <QTimer>
 #include <QDebug>
 #include <QGraphicsScene>
 
-Bird::Bird() {
+BirdAI::BirdAI(const double& spawnY) : timeCreated_(std::time(nullptr)) {
+    y_ = spawnY;
     setPixmap(QPixmap("../img/bird_up.png"));
     timer_ = new QTimer(this);
     connect(timer_, &QTimer::timeout, [=]() {
@@ -15,32 +17,37 @@ Bird::Bird() {
     });
     timer_->start(130);
 
-    ground_ = scenePos().y() + 220;
+    ai_ = new AI();
+    ground_ = 220;
 
     yAnimation_ = new QPropertyAnimation(this, "y", this);
-    yAnimation_->setStartValue(scenePos().y());
+    yAnimation_->setStartValue(y_);
     yAnimation_->setEndValue(ground_);
     yAnimation_->setEasingCurve(QEasingCurve::InQuad);
     yAnimation_->setDuration(1000);
 
     rotateAnimation_ = new QPropertyAnimation(this, "rotation", this);
-}
 
-void Bird::startBird() {
     yAnimation_->start();
-    rotateTo(90, 1000, QEasingCurve::InQuad);
+//    rotateTo(90, 1000, QEasingCurve::InQuad);
 }
 
-qreal Bird::rotation() const {
+BirdAI::~BirdAI() noexcept {
+    delete yAnimation_;
+    delete rotateAnimation_;
+    delete timer_;
+    delete ai_;
+}
+
+qreal BirdAI::rotation() const {
     return rotation_;
 }
 
-qreal Bird::y() const {
-//    qDebug() << y_;
+qreal BirdAI::y() const {
     return y_;
 }
 
-void Bird::setRotation(const qreal &newRotation) {
+void BirdAI::setRotation(const qreal &newRotation) {
     rotation_ = newRotation;
     QPointF birdCenter = boundingRect().center();
 
@@ -52,7 +59,7 @@ void Bird::setRotation(const qreal &newRotation) {
     setTransform(qTransform);
 }
 
-void Bird::rotateTo(const qreal & newEnd, const int & duration, const QEasingCurve & curveType) {
+void BirdAI::rotateTo(const qreal & newEnd, const int & duration, const QEasingCurve & curveType) {
     rotateAnimation_->setStartValue(rotation());
     rotateAnimation_->setEndValue(newEnd);
     rotateAnimation_->setEasingCurve(curveType);
@@ -61,12 +68,12 @@ void Bird::rotateTo(const qreal & newEnd, const int & duration, const QEasingCur
     rotateAnimation_->start();
 }
 
-void Bird::setY(const qreal &newY) {
+void BirdAI::setY(const qreal &newY) {
     moveBy(0, newY - y_);
     y_ = newY;
 }
 
-void Bird::changePixmap() {
+void BirdAI::changePixmap() {
     if (currentState_ == State::Up) {
         setPixmap(QPixmap("./img/bird_up.png"));
         currentState_ = State::Down;
@@ -76,8 +83,7 @@ void Bird::changePixmap() {
     }
 }
 
-void Bird::shootUp() {
-    changeBirdStatus(birdStatus::fly);
+void BirdAI::shootUp() {
     yAnimation_->stop();
     rotateAnimation_->stop();
 
@@ -91,15 +97,14 @@ void Bird::shootUp() {
     yAnimation_->setEasingCurve(QEasingCurve::OutQuad);
     yAnimation_->setDuration(300);
     connect(yAnimation_, &QPropertyAnimation::finished, [=](){
-        changeBirdStatus(birdStatus::fall);
         goDown();
     });
     yAnimation_->start();
 
-    rotateTo(-20, 300, QEasingCurve::OutQuad);
+//    rotateTo(-20, 300, QEasingCurve::OutQuad);
 }
 
-void Bird::goDown() {
+void BirdAI::goDown() {
     if (y() < ground_) {
         rotateAnimation_->stop();
         yAnimation_->stop();
@@ -110,14 +115,14 @@ void Bird::goDown() {
         yAnimation_->setDuration(1000);
         yAnimation_->start();
 
-        rotateTo(90, 1000, QEasingCurve::InQuad);
+//        rotateTo(90, 1000, QEasingCurve::InQuad);
     }
 }
 
-void Bird::stopBird() {
-    timer_->stop();
+void BirdAI::fixEfficenty() {
+    efficenty_ = std::time(nullptr) - timeCreated_;
 }
 
-void Bird::changeBirdStatus(birdStatus newBirdStatus) {
-    birdStatus_ = newBirdStatus;
+int BirdAI::getEfficenty() const {
+    return efficenty_;
 }
