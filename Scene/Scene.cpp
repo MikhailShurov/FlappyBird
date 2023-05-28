@@ -13,7 +13,7 @@
 Scene::Scene(QObject *parent): score_(0){
     setSceneRect(-width_/2, -height_/2, width_, height_);
     eachFrame_ = new QTimer(this);
-    connect(eachFrame_, &QTimer::timeout, this, &Scene::printDataToConsole);
+//    connect(eachFrame_, &QTimer::timeout, this, &Scene::printDataToConsole);
     eachFrame_->setInterval(20);
     eachFrame_->start();
 

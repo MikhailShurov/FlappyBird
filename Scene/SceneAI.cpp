@@ -228,6 +228,5 @@ std::vector<double> SceneAI::readFromFile() {
     std::istringstream sstream(line);
     double w1 = -1, w2 = -1, w3 = -1;
     sstream >> w1 >> w2 >> w3;
-    qDebug() << w1 << w2 << w3;
     return {w1, w2, w3};
 }
