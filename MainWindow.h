@@ -14,6 +14,9 @@ public:
 
 private:
     void setup();
+
+protected:
+    void keyPressEvent(QKeyEvent *event) override;
 };
 
 #endif // MAINWINDOW_H

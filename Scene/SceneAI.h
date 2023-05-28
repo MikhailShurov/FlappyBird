@@ -12,6 +12,8 @@
 #include <QTimer>
 #include <vector>
 #include <QStack>
+#include <QResizeEvent>
+#include <QLabel>
 
 class SceneAI: public  QGraphicsScene{
 public:
@@ -33,6 +35,14 @@ private:
     QStack<std::vector<double>> birdsWeights_;
     void mutate(std::vector<double>&);
     std::vector<double> crossover(const std::vector<double>&, const std::vector<double>&);
+    QGraphicsPixmapItem* background_;
+    QLabel* generation_;
+    QLabel* currentScore_;
+    QLabel* alive_;
+    int gen_ = 0;
+    const int width_ = 1920;
+    const int height_ = 1080;
+    bool needMutation_;
 protected:
     void spawnPillars();
 public slots:
