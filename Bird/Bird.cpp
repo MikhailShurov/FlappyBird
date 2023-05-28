@@ -7,7 +7,7 @@
 #include <QDebug>
 #include <QGraphicsScene>
 
-Bird::Bird() {
+Bird::Bird(const double& spawnY): y_(spawnY){
     setPixmap(QPixmap("../img/bird_up.png"));
     timer_ = new QTimer(this);
     connect(timer_, &QTimer::timeout, [=]() {
@@ -15,7 +15,7 @@ Bird::Bird() {
     });
     timer_->start(130);
 
-    ground_ = scenePos().y() + 220;
+    ground_ = 500;
 
     yAnimation_ = new QPropertyAnimation(this, "y", this);
     yAnimation_->setStartValue(scenePos().y());
@@ -28,7 +28,7 @@ Bird::Bird() {
 
 void Bird::startBird() {
     yAnimation_->start();
-    rotateTo(90, 1000, QEasingCurve::InQuad);
+    rotateTo(60, 700, QEasingCurve::Linear);
 }
 
 qreal Bird::rotation() const {
@@ -83,7 +83,7 @@ void Bird::shootUp() {
 
     qreal currentPos = y();
     yAnimation_->setStartValue(currentPos);
-    qreal endValue = currentPos - scene()->sceneRect().height()/8;
+    qreal endValue = currentPos - scene()->sceneRect().height()/15;
     if (endValue < -scene()->sceneRect().height()/2) {
         endValue = -scene()->sceneRect().height()/2;
     }
@@ -96,7 +96,7 @@ void Bird::shootUp() {
     });
     yAnimation_->start();
 
-    rotateTo(-20, 300, QEasingCurve::OutQuad);
+    rotateTo(-30, 300, QEasingCurve::OutQuad);
 }
 
 void Bird::goDown() {
@@ -110,7 +110,7 @@ void Bird::goDown() {
         yAnimation_->setDuration(1000);
         yAnimation_->start();
 
-        rotateTo(90, 1000, QEasingCurve::InQuad);
+        rotateTo(60, 700, QEasingCurve::Linear);
     }
 }
 

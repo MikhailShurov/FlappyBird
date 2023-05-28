@@ -7,6 +7,6 @@
         <file>img/bird_up.png</file>
         <file>img/bottomPillar.png</file>
         <file>img/topPillar.png</file>
-
+        <file>img/caves.png</file>
     </qresource>
 </RCC>

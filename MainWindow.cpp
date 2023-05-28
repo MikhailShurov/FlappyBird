@@ -1,9 +1,10 @@
 #include "MainWindow.h"
-#include "Bird/Bird.h"
 #include "Scene/Scene.h"
 #include "Scene/SceneAI.h"
+#include "Scene/MainMenuScene.h"
 #include <QGraphicsView>
-#include <QDebug>
+#include <QSizePolicy>
+
 
 MainWindow::MainWindow()
 {
@@ -13,12 +14,38 @@ MainWindow::MainWindow()
 MainWindow::~MainWindow() = default;
 
 void MainWindow::setup() {
-// uncomment if you need usual mode
-//    Scene* scene = new Scene(this);
-//    QGraphicsView* view = new QGraphicsView(scene);
 
-// AI mode
-    SceneAI* sceneAI = new SceneAI(this);
-    QGraphicsView* view = new QGraphicsView(sceneAI);
-    setCentralWidget(view);
+// MainMenu
+    MainMenuScene* menuScene = new MainMenuScene(this);
+    connect(menuScene, &MainMenuScene::signalToChangeScene, [=](int index) {
+        changeScene(index);
+    });
+    view_ = new QGraphicsView(menuScene);
+    view_->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    view_->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setCentralWidget(view_);
+}
+
+
+void MainWindow::keyPressEvent(QKeyEvent *event) {
+    if (event->key() == Qt::Key_Escape) {
+        close();
+    }
+}
+
+void MainWindow::changeScene(const int& index) {
+    switch (index) {
+        case 1:
+            scene_ = new Scene(this);
+            view_->setScene(scene_);
+            break;
+        case 2:
+            sceneAi_ = new SceneAI(this);
+            view_->setScene(sceneAi_);
+            break;
+        case 3:
+            sceneAi_ = new SceneAI(this, true);
+            view_->setScene(sceneAi_);
+            break;
+    }
 }

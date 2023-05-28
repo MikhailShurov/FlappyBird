@@ -8,20 +8,25 @@
 #include <QGraphicsItem>
 #include <QDebug>
 #include <fstream>
+#include <QApplication>
 
 Scene::Scene(QObject *parent): score_(0){
-    setSceneRect(-144, -256, 288, 512);
+    setSceneRect(-width_/2, -height_/2, width_, height_);
     eachFrame_ = new QTimer(this);
-    connect(eachFrame_, &QTimer::timeout, this, &Scene::printDataToConsole);
+//    connect(eachFrame_, &QTimer::timeout, this, &Scene::printDataToConsole);
     eachFrame_->setInterval(20);
     eachFrame_->start();
 
-    QGraphicsPixmapItem *background = new QGraphicsPixmapItem(QPixmap("./img/background_night.png"));
-    background->setPos(
-            QPointF(0, 0) - QPointF(background->boundingRect().width() / 2, background->boundingRect().height() / 2));
-    addItem(background);
+    QPixmap backgroundPixmap("./img/caves.png");
+    background_ = new QGraphicsPixmapItem(backgroundPixmap);
+//    background_->setTransformationMode(Qt::SmoothTransformation);
+//    background_->setPixmap(backgroundPixmap.scaled(backgroundPixmap.size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
 
-    bird_ = new Bird();
+    background_->setPos(
+            QPointF(0, 0) - QPointF(background_->boundingRect().width() / 2, background_->boundingRect().height() / 2));
+    addItem(background_);
+
+    bird_ = new Bird(0);
 
     addItem(bird_);
     gameStatus_ = gameStatus::GameOff;
@@ -36,25 +41,26 @@ void Scene::startGame() {
 
 void Scene::keyPressEvent(QKeyEvent *event) {
     Pillar* pillar = getClosestPillar();
-    if (pillar != nullptr) {
-        std::ofstream fout("output.txt", std::ios::app);
-        fout << pillar->scenePos().x() << " " << pillar->getTopOfInterval() << " " << pillar->getBottomOfInterval() << " " << bird_->y() << " 1\n";
-//        qDebug() << pillar->scenePos().x() << pillar->getTopOfInterval() << pillar->getBottomOfInterval() << bird_->y() << "1";
-    }
     if (gameStatus_ == gameStatus::GameOn) {
         if (event->key() == Qt::Key_Space) {
             bird_->shootUp();
+        } else if (event->key() == Qt::Key_Escape) {
+            QCoreApplication::quit();
         }
     } else if (gameStatus_ == gameStatus::GameOff){
         if ((event->key() == Qt::Key_Space)) {
             gameStatus_ = gameStatus::GameOn;
             bird_->shootUp();
             startGame();
+        } else if (event->key() == Qt::Key_Escape) {
+            QCoreApplication::quit();
         }
     } else {
         if (event->key() == Qt::Key_Space) {
             gameStatus_ = gameStatus::GameOff;
             restartGame();
+        } else if (event->key() == Qt::Key_Escape) {
+            QCoreApplication::quit();
         }
     }
 }
@@ -77,7 +83,7 @@ void Scene::restartGame() {
             delete item;
         }
     }
-    bird_ = new Bird();
+    bird_ = new Bird(0);
     addItem(bird_);
     spawnPillars();
 }
@@ -131,13 +137,7 @@ Pillar* Scene::getClosestPillar() {
 }
 
 void Scene::printDataToConsole() {
-
     if (bird_->birdStatus_ != Bird::birdStatus::fly) {
         Pillar* pillar = getClosestPillar();
-        if (pillar != nullptr) {
-            std::ofstream fout("output.txt", std::ios::app);
-            fout << pillar->scenePos().x() << " " << pillar->getTopOfInterval() << " " << pillar->getBottomOfInterval() << " " << bird_->y() << " 0\n";
-//            qDebug() << pillar->scenePos().x() << pillar->getTopOfInterval() << pillar->getBottomOfInterval() << bird_->y() << "0";
-        }
     }
 }

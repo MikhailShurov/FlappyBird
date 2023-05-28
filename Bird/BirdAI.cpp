@@ -18,7 +18,7 @@ BirdAI::BirdAI(const double& spawnY) : timeCreated_(std::time(nullptr)) {
     timer_->start(130);
 
     ai_ = new AI();
-    ground_ = 220;
+    ground_ = 500;
 
     yAnimation_ = new QPropertyAnimation(this, "y", this);
     yAnimation_->setStartValue(y_);
@@ -89,7 +89,7 @@ void BirdAI::shootUp() {
 
     qreal currentPos = y();
     yAnimation_->setStartValue(currentPos);
-    qreal endValue = currentPos - scene()->sceneRect().height()/8;
+    qreal endValue = currentPos - scene()->sceneRect().height()/15;
     if (endValue < -scene()->sceneRect().height()/2) {
         endValue = -scene()->sceneRect().height()/2;
     }

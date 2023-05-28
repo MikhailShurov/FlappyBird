@@ -22,11 +22,6 @@ std::vector<double> AI::getWeights() {
 
 void AI::setWeights(std::vector<double> newWeights) {
     this->weights = newWeights;
-    std::ofstream outfile("weights.txt", std::ios_base::app);
-    for (int i = 0; i < weights.size(); i++) {
-        outfile << weights[i] << " ";
-    }
-    outfile << "\n";
 }
 
 

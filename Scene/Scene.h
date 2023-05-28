@@ -32,10 +32,13 @@ private:
 
 
     gameStatus gameStatus_;
+    QGraphicsPixmapItem* background_;
     QTimer* timer_;
     QTimer* eachFrame_;
     int score_;
     Pillar* getClosestPillar();
+    const int width_ = 1920;
+    const int height_ = 1080;
 protected:
     void keyPressEvent(QKeyEvent*) override;
     void mousePressEvent(QGraphicsSceneMouseEvent*) override;

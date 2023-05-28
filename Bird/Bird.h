@@ -15,7 +15,7 @@ class Bird: public QObject, public QGraphicsPixmapItem{
     Q_PROPERTY(qreal y READ y WRITE setY);
 
 public:
-    Bird();
+    Bird(const double&);
     qreal rotation() const;
     qreal y() const;
 

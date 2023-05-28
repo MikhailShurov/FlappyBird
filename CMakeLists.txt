@@ -11,12 +11,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+#find_package(Qt6 REQUIRED COMPONENTS Multimedia)
 
 set(PROJECT_SOURCES
         main.cpp
         MainWindow.cpp
         MainWindow.h
-        resources.qrc Bird/Bird.cpp Bird/Bird.h Scene/Scene.cpp Scene/Scene.h Pillar/Pillar.cpp Pillar/Pillar.h Scene/SceneAI.cpp Scene/SceneAI.h Bird/BirdAI.cpp Bird/BirdAI.h AI/AI.cpp AI/AI.h)
+        resources.qrc Bird/Bird.cpp Bird/Bird.h Scene/Scene.cpp Scene/Scene.h Pillar/Pillar.cpp Pillar/Pillar.h Scene/SceneAI.cpp Scene/SceneAI.h Bird/BirdAI.cpp Bird/BirdAI.h AI/AI.cpp AI/AI.h Scene/MainMenuScene.cpp Scene/MainMenuScene.h)
 
 qt5_add_big_resources(RESOURCES resources.qrc)
 
@@ -44,6 +45,8 @@ else()
 endif()
 
 target_link_libraries(FlappyBird PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+# Qt6::Multimedia
+
 
 set_target_properties(FlappyBird PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
