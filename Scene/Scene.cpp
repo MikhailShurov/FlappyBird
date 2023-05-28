@@ -41,10 +41,6 @@ void Scene::startGame() {
 
 void Scene::keyPressEvent(QKeyEvent *event) {
     Pillar* pillar = getClosestPillar();
-    if (pillar != nullptr) {
-        std::ofstream fout("output.txt", std::ios::app);
-        fout << pillar->scenePos().x() << " " << pillar->getTopOfInterval() << " " << pillar->getBottomOfInterval() << " " << bird_->y() << " 1\n";
-    }
     if (gameStatus_ == gameStatus::GameOn) {
         if (event->key() == Qt::Key_Space) {
             bird_->shootUp();
@@ -141,13 +137,7 @@ Pillar* Scene::getClosestPillar() {
 }
 
 void Scene::printDataToConsole() {
-
     if (bird_->birdStatus_ != Bird::birdStatus::fly) {
         Pillar* pillar = getClosestPillar();
-        if (pillar != nullptr) {
-            std::ofstream fout("output.txt", std::ios::app);
-            fout << pillar->scenePos().x() << " " << pillar->getTopOfInterval() << " " << pillar->getBottomOfInterval() << " " << bird_->y() << " 0\n";
-//            qDebug() << pillar->scenePos().x() << pillar->getTopOfInterval() << pillar->getBottomOfInterval() << bird_->y() << "0";
-        }
     }
 }

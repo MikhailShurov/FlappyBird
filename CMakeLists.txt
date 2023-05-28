@@ -17,7 +17,7 @@ set(PROJECT_SOURCES
         main.cpp
         MainWindow.cpp
         MainWindow.h
-        resources.qrc Bird/Bird.cpp Bird/Bird.h Scene/Scene.cpp Scene/Scene.h Pillar/Pillar.cpp Pillar/Pillar.h Scene/SceneAI.cpp Scene/SceneAI.h Bird/BirdAI.cpp Bird/BirdAI.h AI/AI.cpp AI/AI.h)
+        resources.qrc Bird/Bird.cpp Bird/Bird.h Scene/Scene.cpp Scene/Scene.h Pillar/Pillar.cpp Pillar/Pillar.h Scene/SceneAI.cpp Scene/SceneAI.h Bird/BirdAI.cpp Bird/BirdAI.h AI/AI.cpp AI/AI.h Scene/MainMenuScene.cpp Scene/MainMenuScene.h)
 
 qt5_add_big_resources(RESOURCES resources.qrc)
 

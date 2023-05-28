@@ -168,7 +168,7 @@ void SceneAI::checkBirdsJump() {
     }
     Pillar* closest;
     for (Pillar* pillar: allPillars_) {
-        if (pillar->scenePos().x() > 0) {
+        if (pillar->scenePos().x() > -20) {
             closest = pillar;
             break;
         }
@@ -194,8 +194,8 @@ std::vector<double> SceneAI::crossover(const std::vector<double>& parent1Weights
     if (std::rand() == 0) {
         child1Weights = parent1Weights;
     }
-    int mut = std::rand() % 2;
-    if (mut && needMutation_) {
+    int mut = std::rand() % 5;
+    if (mut == 0 && needMutation_) {
         mutate(child1Weights);
     }
     return child1Weights;
@@ -204,10 +204,10 @@ std::vector<double> SceneAI::crossover(const std::vector<double>& parent1Weights
 void SceneAI::mutate(std::vector<double> &child) {
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_real_distribution<double> dis(0, 1.0);
+    std::uniform_real_distribution<double> dis(-0.5, 0.5);
     int index = std::rand() % child.size();
     double mutationAmount = dis(gen);
-    child[index] *= mutationAmount;
+    child[index] += child[index] * mutationAmount;
     if (child[index] < -30.0) {
         child[index] = -30.0;
     } else if (child[index] > 30.0) {
