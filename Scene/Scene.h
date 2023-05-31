@@ -13,6 +13,7 @@
 class Scene: public  QGraphicsScene{
 public:
     explicit Scene(QObject *parent = nullptr);
+    ~Scene();
     void startGame();
     void restartGame();
     void stopGame();
@@ -22,8 +23,8 @@ public slots:
     void printDataToConsole();
 
 private:
-    Bird* bird_;
-    Pillar* pillarGroup_;
+    Bird* bird_ = nullptr;
+    Pillar* pillarGroup_ = nullptr;
     enum class gameStatus {
         GameOn,
         GameOff,
@@ -32,16 +33,15 @@ private:
 
 
     gameStatus gameStatus_;
-    QGraphicsPixmapItem* background_;
-    QTimer* timer_;
-    QTimer* eachFrame_;
+    QGraphicsPixmapItem* background_ = nullptr;
+    QTimer* timer_ = nullptr;
+    QTimer* eachFrame_ = nullptr;
     int score_;
     Pillar* getClosestPillar();
     const int width_ = 1920;
     const int height_ = 1080;
 protected:
     void keyPressEvent(QKeyEvent*) override;
-    void mousePressEvent(QGraphicsSceneMouseEvent*) override;
     void spawnPillars();
 };
 

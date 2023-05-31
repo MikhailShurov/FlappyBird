@@ -65,13 +65,13 @@ void Scene::keyPressEvent(QKeyEvent *event) {
     }
 }
 
-void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-    if (gameStatus_ == gameStatus::GameOn) {
-        if(event->button() == Qt::LeftButton) {
-            bird_->shootUp();
-        }
-    }
-}
+//void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+//    if (gameStatus_ == gameStatus::GameOn) {
+//        if(event->button() == Qt::LeftButton) {
+//            bird_->shootUp();
+//        }
+//    }
+//}
 
 void Scene::restartGame() {
     score_ = 0;
@@ -139,5 +139,28 @@ Pillar* Scene::getClosestPillar() {
 void Scene::printDataToConsole() {
     if (bird_->birdStatus_ != Bird::birdStatus::fly) {
         Pillar* pillar = getClosestPillar();
+    }
+}
+
+Scene::~Scene() noexcept {
+    if (bird_ != nullptr) {
+        delete bird_;
+        bird_ = nullptr;
+    }
+    if (pillarGroup_ != nullptr) {
+        delete pillarGroup_;
+        pillarGroup_ = nullptr;
+    }
+    if (background_ != nullptr) {
+        delete background_;
+        background_ = nullptr;
+    }
+    if (timer_ != nullptr) {
+        delete timer_;
+        timer_ = nullptr;
+    }
+    if (eachFrame_ != nullptr) {
+        delete eachFrame_;
+        eachFrame_ = nullptr;
     }
 }

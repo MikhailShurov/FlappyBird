@@ -15,7 +15,7 @@ Q_OBJECT
     Q_PROPERTY(qreal rotation READ rotation WRITE setRotation);
     Q_PROPERTY(qreal y READ y WRITE setY);
 public:
-    BirdAI(const double &);
+    BirdAI(const double &, bool = true);
     ~BirdAI();
     qreal rotation() const;
     qreal y() const;

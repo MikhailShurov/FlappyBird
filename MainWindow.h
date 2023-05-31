@@ -6,6 +6,7 @@
 #include <QGraphicsView>
 #include "Scene/SceneAI.h"
 #include "Scene/Scene.h"
+#include "Scene/MainMenuScene.h"
 
 class MainWindow : public QMainWindow {
 Q_OBJECT
@@ -17,13 +18,16 @@ public:
 
 private:
     void setup();
-    Scene* scene_;
-    SceneAI* sceneAi_;
+    Scene* scene_ = nullptr;
+    SceneAI* sceneAi_ = nullptr;
+    SceneAI* trained_ = nullptr;
+    MainMenuScene* menuScene_ = nullptr;
     QGraphicsView* view_;
 protected:
     void keyPressEvent(QKeyEvent *event) override;
 public slots:
     void changeScene(const int&);
+    void goToMainMenu();
 };
 
 #endif // MAINWINDOW_H

@@ -29,20 +29,47 @@ MainMenuScene::MainMenuScene(QObject *parent) {
     hBoxLayout_ = new QHBoxLayout();
 
     classic_ = new QPushButton("Classic mode");
-    classic_->setFixedSize(100, 100);
-    classic_->setStyleSheet("background-color: #ff7420; border-radius: 25px; border: 2px solid brown;");
+    classic_->setFixedSize(120, 100);
+    QFont qFont = classic_->font();
+    qFont.setBold(true);
+    classic_->setFont(qFont);
+//    classic_->setStyleSheet("background-color: #ff7420; border-radius: 25px; border: 4px solid brown;");
+    classic_->setStyleSheet("QPushButton {\
+                        background-color: #ff7420; \
+                        border-radius: 25px; \
+                        border: 4px solid brown\
+                    } \
+                    QPushButton:hover { \
+                        background-color: #cd5700; \
+                    }");
     connect(classic_, &QPushButton::clicked, [=]() {
         changeScene(1);
     });
     ai_ = new QPushButton("Train AI");
-    ai_->setFixedSize(100, 100);
-    ai_->setStyleSheet("background-color: #ff7420; border-radius: 25px; border: 2px solid brown;");
+    ai_->setFixedSize(120, 100);
+    ai_->setFont(qFont);
+    ai_->setStyleSheet("QPushButton {\
+                        background-color: #ff7420; \
+                        border-radius: 25px; \
+                        border: 4px solid brown\
+                    } \
+                    QPushButton:hover { \
+                        background-color: #cd5700; \
+                    }");
     connect(ai_, &QPushButton::clicked, [=]() {
         changeScene(2);
     });
     trainedAi_ = new QPushButton("Start trained AI");
-    trainedAi_->setFixedSize(100, 100);
-    trainedAi_->setStyleSheet("background-color: #ff7420; border-radius: 25px; border: 2px solid brown;");
+    trainedAi_->setFixedSize(120, 100);
+    trainedAi_->setFont(qFont);
+    trainedAi_->setStyleSheet("QPushButton {\
+                        background-color: #ff7420; \
+                        border-radius: 25px; \
+                        border: 4px solid brown\
+                    } \
+                    QPushButton:hover { \
+                        background-color: #cd5700; \
+                    }");
     connect(trainedAi_, &QPushButton::clicked, [=]() {
         changeScene(3);
     });

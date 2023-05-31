@@ -8,7 +8,7 @@
 #include <QDebug>
 #include <QGraphicsScene>
 
-BirdAI::BirdAI(const double& spawnY) : timeCreated_(std::time(nullptr)) {
+BirdAI::BirdAI(const double& spawnY, bool fall) : timeCreated_(std::time(nullptr)) {
     y_ = spawnY;
     setPixmap(QPixmap("../img/bird_up.png"));
     timer_ = new QTimer(this);
@@ -27,8 +27,9 @@ BirdAI::BirdAI(const double& spawnY) : timeCreated_(std::time(nullptr)) {
     yAnimation_->setDuration(1000);
 
     rotateAnimation_ = new QPropertyAnimation(this, "rotation", this);
-
-    yAnimation_->start();
+//    if (fall) {
+        yAnimation_->start();
+//    }
 //    rotateTo(90, 1000, QEasingCurve::InQuad);
 }
 

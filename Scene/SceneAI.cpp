@@ -9,7 +9,7 @@
 #include <fstream>
 #include <sstream>
 #include <QGraphicsScene>
-//#include <QMediaPlayer>
+#include <QGraphicsProxyWidget>
 
 
 SceneAI::SceneAI(QObject *parent, bool takeWeightsFromFile) : score_(0), gen_(1), needMutation_(true), takeFromFile_(takeWeightsFromFile) {
@@ -21,7 +21,9 @@ SceneAI::SceneAI(QObject *parent, bool takeWeightsFromFile) : score_(0), gen_(1)
        checkBirdsJump();
     });
     eachFrame_->start();
-
+    if (takeWeightsFromFile) {
+        fall_ = false;
+    }
     QPixmap backgroundPixmap("./img/caves.png");
     background_ = new QGraphicsPixmapItem(backgroundPixmap);
 //    background_->setTransformationMode(Qt::SmoothTransformation);
@@ -30,24 +32,28 @@ SceneAI::SceneAI(QObject *parent, bool takeWeightsFromFile) : score_(0), gen_(1)
     background_->setPos(
             QPointF(0, 0) - QPointF(background_->boundingRect().width() / 2, background_->boundingRect().height() / 2));
     addItem(background_);
+    proxy_ = new QGraphicsProxyWidget();
 
     generation_ = new QLabel("GENERATION:");
-    generation_->setStyleSheet("background-color:white;");
-    generation_->move(0, -256);
-    generation_->resize(100, 20);
-    addWidget(generation_);
+    generation_->setStyleSheet("background-color:white;border:1px solid black");
+    generation_->move(0, -400);
+    generation_->resize(110, 20);
+    proxy_ = addWidget(generation_);
+    proxy_->setZValue(100);
 
     currentScore_ = new QLabel("SCORE:");
-    currentScore_->setStyleSheet("background-color:red;");
-    currentScore_->move(0, -236);
-    currentScore_->resize(100, 20);
-    addWidget(currentScore_);
+    currentScore_->setStyleSheet("background-color:white;border:1px solid black");
+    currentScore_->move(0, -380);
+    currentScore_->resize(110, 20);
+    proxy_ = addWidget(currentScore_);
+    proxy_->setZValue(100);
 
     alive_ = new QLabel();
-    alive_->setStyleSheet("background-color:white;");
-    alive_->move(0, -216);
-    alive_->resize(100, 20);
-    addWidget(alive_);
+    alive_->setStyleSheet("background-color:white;border:1px solid black");
+    alive_->move(0, -360);
+    alive_->resize(110, 20);
+    proxy_ = addWidget(alive_);
+    proxy_->setZValue(100);
 
     createNewGeneration();
 }
@@ -59,9 +65,9 @@ void SceneAI::createNewGeneration() {
 
     timer_ = new QTimer(this);
 
-    for (int i = 0; i < 100; ++ i) {
+    for (int i = 0; i < 70; ++ i) {
         int birdY = 0;
-        BirdAI* bird = new BirdAI(birdY);
+        BirdAI* bird = new BirdAI(birdY, fall_);
         if (!birdsWeights_.empty() && score_ > 0) {
             std::vector<double> firstParent = birdsWeights_.top();
             birdsWeights_.pop();
@@ -71,8 +77,8 @@ void SceneAI::createNewGeneration() {
             bird->ai_->setWeights(children);
         }
         if (takeFromFile_) {
-            std::vector<double> weights = readFromFile();
-            bird->ai_->setWeights(weights);
+//            std::vector<double> weights = readFromFile();
+            bird->ai_->setWeights({3.90802, -21.4343, 11.3567});
         }
         bird->setPos(QPointF(0, birdY));
         birds_.append(bird);
@@ -228,5 +234,49 @@ std::vector<double> SceneAI::readFromFile() {
     std::istringstream sstream(line);
     double w1 = -1, w2 = -1, w3 = -1;
     sstream >> w1 >> w2 >> w3;
+//    qDebug() << w1 << w2 << w3;
     return {w1, w2, w3};
+}
+
+SceneAI::~SceneAI() noexcept {
+    stopGame();
+    birds_.clear();
+    QList<QGraphicsItem*> items = this->items();
+    for (auto* item : items) {
+        BirdAI* birdAi = dynamic_cast<BirdAI*>(item);
+        if (birdAi) {
+            delete birdAi;
+        }
+    }
+    if (pillarGroup_ != nullptr) {
+        delete pillarGroup_;
+    }
+    if (timer_ != nullptr) {
+        delete timer_;
+    }
+
+    if (eachFrame_ != nullptr) {
+        delete eachFrame_;
+    }
+    deletePillars();
+    if (background_ != nullptr) {
+        delete background_;
+        background_ = nullptr;
+    }
+    if (generation_ != nullptr) {
+        delete generation_;
+        generation_ = nullptr;
+    }
+    if (currentScore_ != nullptr) {
+        delete currentScore_;
+        currentScore_ = nullptr;
+    }
+    if (alive_ != nullptr) {
+        delete alive_;
+        alive_ = nullptr;
+    }
+    if (proxy_ != nullptr) {
+        delete proxy_;
+        proxy_ = nullptr;
+    }
 }

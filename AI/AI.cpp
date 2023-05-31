@@ -24,8 +24,6 @@ void AI::setWeights(std::vector<double> newWeights) {
     this->weights = newWeights;
 }
 
-
-
 bool AI::needJump(double input1, double input2, double input3) {
     double sum = weights[0] * input1 + weights[1] * input2 + weights[2] * input3;
     double output = tanh(sum);
